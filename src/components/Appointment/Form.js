@@ -5,27 +5,25 @@ import Button from "../Button";
 export default function Form(props) {
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
-
+  
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
-        <form autoComplete="off">
+        <form onSubmit={event => event.preventDefault()} autoComplete="off">
           <input
             className="appointment__create-input text--semi-bold"
             name="name"
             type="text"
             placeholder="Enter Student Name"
             value={student}
-            // Capture name being typed
             onChange={(event) => setStudent(event.target.value)}
-            // save typed in name when save buton clicked
-
+           
           />
         </form>
         <InterviewerList   
           interviewers={props.interviewers}
-          //onclick - setInterviwer to interviwer id?
-          onClick={setInterviewer === interviewer}
+          value={interviewer}
+          onChange={setInterviewer}
           />
       </section>
       <section className="appointment__card-right">
