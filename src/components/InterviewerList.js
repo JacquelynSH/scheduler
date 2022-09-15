@@ -3,7 +3,7 @@ import InterviewerListItem from "./InterviewerListItem";
 import "styles/interviewerList.scss";
 
 export default function InterviewerList(props) {
-  console.log(props);
+
 
   return (
     <section className="interviewers">
