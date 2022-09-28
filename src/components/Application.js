@@ -7,6 +7,7 @@ import "components/Appointment";
 import Appointment from "components/Appointment";
 import { getAppointmentsForDay } from "helpers/selectors";
 import { getInterview } from "helpers/selectors";
+import { getInterviewersForDay } from "helpers/selectors";
 
 export default function Application(props) {
   const [state, setState] = useState({
@@ -23,13 +24,14 @@ export default function Application(props) {
       axios.get("/api/appointments"),
       axios.get("/api/interviewers"),
     ]).then((all) => {
+      const days = all[0].data;
+      const appointments = all[1].data;
+      const interviewers = all[2].data;
       setState((prev) => ({
-        ...prev,
-        days: all[0].data,
-        appointments: all[1].data,
-        interviewers: all[2].data,
+        ...prev, days, appointments, interviewers
       }));
-    });
+    })
+      .catch((err) => console.error(err.response))
   }, []);
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
@@ -37,12 +39,39 @@ export default function Application(props) {
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
 
+    const interviewers = getInterviewersForDay(state, state.day);
+
+    function bookInterview(id, interview) {
+
+      const appointment = {
+        ...state.appointments[id],
+        interview: { ...interview }
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+
+      return axios
+        .put(`/api/appointments/${appointment.id}`, appointment)
+        .then((res) => {
+          const status = res.status
+          setState(prev => ({
+            ...prev,
+            appointments
+          }));
+          return status
+        }).catch((err) => console.error(err))
+    };
+
     return (
       <Appointment
         key={appointment.id}
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
       />
     );
   });

@@ -4,7 +4,6 @@ import "components/DayList";
 import classNames from "classnames";
 
 export default function DayListItem(props) {
-  console.log(props);
 
   const dayClass = classNames("dayList", {
     "day-list__item": props,
