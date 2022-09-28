@@ -31,38 +31,60 @@ export default function Application(props) {
         ...prev, days, appointments, interviewers
       }));
     })
-      .catch((err) => console.error(err.response))
+    .catch((err) => console.error(err.response))
   }, []);
-
+  
   const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
+      // When the function is triggered by the interview being booked, it takes in id and interview as perameters
+      function bookInterview(id, interview) {
+        // id = the id of the interview slot 
+        // interview = student: 'name entered', interviewer: 3 or whatever number id picked
+        const appointment = {
+          ...state.appointments[id], 
+          interview: { ...interview }
+        };
+        console.log(appointment)
+
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment
+        };
+
+        return axios
+          .put(`/api/appointments/${id}`, {interview})
+          .then(() => {
+            setState(prev => ({
+              ...prev,
+              appointments
+            }));
+          })
+      };
+  
+      function cancelInterview(id) {
+        const appointment = {
+          ...state.appointments[id], 
+          interview: null
+        };
+        console.log(appointment)
+
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment
+        };
+
+        return axios
+          .delete(`/api/appointments/${id}`)
+          .then(() => {
+            setState(prev => ({
+              ...prev,
+              appointments
+            }));
+          })
+      };
 
   const schedule = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
-
-    const interviewers = getInterviewersForDay(state, state.day);
-
-    function bookInterview(id, interview) {
-
-      const appointment = {
-        ...state.appointments[id],
-        interview: { ...interview }
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
-
-      return axios
-        .put(`/api/appointments/${appointment.id}`, appointment)
-        .then((res) => {
-          const status = res.status
-          setState(prev => ({
-            ...prev,
-            appointments
-          }));
-          return status
-        }).catch((err) => console.error(err))
-    };
 
     return (
       <Appointment
@@ -72,13 +94,14 @@ export default function Application(props) {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
 
   return (
     <main className="layout">
-      ç
+      
       <section className="sidebar">
         <img
           className="sidebar--centered"
