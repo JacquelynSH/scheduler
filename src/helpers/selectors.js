@@ -15,19 +15,15 @@ export function getAppointmentsForDay(state, day) {
 
 export function getInterviewersForDay(state, day) {
   let resultsArray = [];
-
   // filtering through the state array. Gives you all in state.days array that meet the condition
   const appointmentByDay = state.days.filter((days) => days.name === day);
-
   // if there is no appointment return empty array
   if (!appointmentByDay[0]) {
     return resultsArray;
   }
   //appointmentsByID = basicly state.days.appointments array - [1, 2, 3] and [4, 5]
-  const appointmentsByID = appointmentByDay[0].appointments;
-
-  resultsArray = appointmentsByID.map((id) => state.interviewers[id]);
-
+  const interviewersByID = appointmentByDay[0].interviewers;
+  resultsArray = interviewersByID.map((id) => state.interviewers[id]);
   return resultsArray;
 }
 
