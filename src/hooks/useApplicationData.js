@@ -9,12 +9,12 @@ export default function useApplicationData() {
     // find the id of current day
     const dayId = currentDay.id;
     // update the amount of spots - make copy, map over, compare the id and update conditionally
-    const updateDays = [...state.days].map(day => day.id === dayId ? {...day, spots: day.spots + spot} : {...day});
-    
-    return updateDays;
-  }; 
+    const updateDays = [...state.days].map(day => day.id === dayId ? { ...day, spots: day.spots + spot } : { ...day });
 
-  
+    return updateDays;
+  };
+
+
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -50,7 +50,7 @@ export default function useApplicationData() {
 
     const appointments = {
       ...state.appointments,
-      [id]: appointment 
+      [id]: appointment
     };
 
     const prevInterview = state.appointments[id].interview;
@@ -79,9 +79,9 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
-    
+
     const days = updateSpots(1)
-    
+
     return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
@@ -92,8 +92,8 @@ export default function useApplicationData() {
         }));
       })
   };
-  
 
-  
-  return {state, setDay, bookInterview, cancelInterview}
+
+
+  return { state, setDay, bookInterview, cancelInterview }
 }
