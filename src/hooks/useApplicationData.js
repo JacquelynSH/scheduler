@@ -2,6 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function useApplicationData() {
+
+  function updateSpots(spot) {
+    // find the current day - map over state.days and find return the day.name that matches the state.day
+    const currentDay = state.days.find(day => day.name === state.day);
+    const dayId = currentDay.id;
+    const updateDays = [...state.days].map(day => day.id === dayId ? {...day, spots: day.spots + spot} : {...day});
+    return updateDays;
+  }; 
+
+  
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -28,26 +38,29 @@ export default function useApplicationData() {
   }, []);
 
 
-
   // function is triggered by the interview being booked, it takes in id and interview as perameters
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
-    console.log(appointment)
 
     const appointments = {
       ...state.appointments,
-      [id]: appointment
+      [id]: appointment 
     };
 
+    const prevInterview = state.appointments[id].interview;
+    const num = prevInterview ? 0 : -1;
+
+    const days = updateSpots(num)
     return axios
       .put(`/api/appointments/${id}`, { interview })
       .then(() => {
         setState(prev => ({
           ...prev,
           appointments,
+          days
         }));
       })
   };
@@ -58,22 +71,25 @@ export default function useApplicationData() {
       ...state.appointments[id],
       interview: null
     };
-    console.log(appointment)
 
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-
+    
+    const days = updateSpots(1)
+    
     return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
         setState(prev => ({
           ...prev,
-          appointments
+          appointments,
+          days
         }));
       })
   };
 
+  
   return {state, setDay, bookInterview, cancelInterview}
 }
