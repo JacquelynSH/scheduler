@@ -6,8 +6,11 @@ export default function useApplicationData() {
   function updateSpots(spot) {
     // find the current day - map over state.days and find return the day.name that matches the state.day
     const currentDay = state.days.find(day => day.name === state.day);
+    // find the id of current day
     const dayId = currentDay.id;
+    // update the amount of spots - make copy, map over, compare the id and update conditionally
     const updateDays = [...state.days].map(day => day.id === dayId ? {...day, spots: day.spots + spot} : {...day});
+    
     return updateDays;
   }; 
 
@@ -89,6 +92,7 @@ export default function useApplicationData() {
         }));
       })
   };
+  
 
   
   return {state, setDay, bookInterview, cancelInterview}

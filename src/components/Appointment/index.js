@@ -40,16 +40,17 @@ export default function Appointment(props) {
   }
 
   function deleteInterview() {
-    transition(DELETING)
+    transition(DELETING, true)
     props.cancelInterview(props.id)
       .then(() => {
         transition(EMPTY);
       })
       .catch(error => transition(ERROR_DELETE, true));
   }
-
+  
   return (
     <article className="appointment">
+      
       <Header time={props.time} />
       {mode === EMPTY &&
         <Empty onAdd={() => transition(CREATE)}
@@ -101,6 +102,7 @@ export default function Appointment(props) {
           onEdit={() => transition(EDIT)}
         />
       )}
+      
     </article>
   );
 }
