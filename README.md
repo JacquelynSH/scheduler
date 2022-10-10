@@ -1,4 +1,7 @@
 # Interview Scheduler
+ 
+Scheduler is a single page app used for appointment booking. Scheduler was built using React, and tested using Jest and Cypress.
+
 
 ## Setup
 
