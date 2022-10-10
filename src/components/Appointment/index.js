@@ -47,10 +47,10 @@ export default function Appointment(props) {
       })
       .catch(error => transition(ERROR_DELETE, true));
   }
-  
+
   return (
     <article className="appointment" data-testid="appointment">
-      
+
       <Header time={props.time} />
       {mode === EMPTY &&
         <Empty onAdd={() => transition(CREATE)}
@@ -73,21 +73,21 @@ export default function Appointment(props) {
       )}
       {mode === EDIT && (
         <Form
-        interviewers={props.interviewers}
-        onSave={save}
-        onCancel={back}
-        /> )}
+          interviewers={props.interviewers}
+          onSave={save}
+          onCancel={back}
+        />)}
       {mode === ERROR_SAVE && (
-        <Error 
-        onClose={back}
+        <Error
+          onClose={back}
         />
       )}
 
       {mode === ERROR_DELETE && (
-        <Error 
-        onClose={back}/>
+        <Error
+          onClose={back} />
       )}
-   
+
       {mode === CREATE && (
         <Form
           interviewers={props.interviewers}
@@ -103,7 +103,7 @@ export default function Appointment(props) {
           onEdit={() => transition(EDIT)}
         />
       )}
-      
+
     </article>
   );
 }
